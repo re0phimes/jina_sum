@@ -208,7 +208,11 @@ class JinaSum(Plugin):
                     logger.debug(f"[JinaSum] Cached SHARING message: {content}, chat_id={chat_id}")
                     return
             else:  # 单聊消息直接处理
-                return self._process_summary(content, e_context, retry_count=0)
+                if self.config.get("enable_private_chat", False):
+                    return self._process_summary(content, e_context, retry_count=0)
+                else:
+                    logger.debug(f"私聊信息，不处理")
+                    return
 
         # 处理文本消息
         elif context.type == ContextType.TEXT:
